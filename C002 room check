@@ -1,0 +1,45 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+
+
+int main() {
+	int person[4][3];
+	int sum[3] = { 0,0,0 };
+	float ratio[3];
+	int i = 0;
+	int j = 0;
+	printf("Check room (men)\n");
+	
+	for (i = 0; i < 2; i++) { // Check room (woman)을 위해 i<2로 설정, i는 유지
+		for (j = 0; j < 3; j++) {
+			printf("Room #%d0%d > ", i + 1, j + 1);
+			scanf("%d", &person[i][j]);
+			sum[0] += person[i][j]; // 남자 합산
+			sum[2] += person[i][j]; // 전체 합산
+		}
+	}
+	printf("Check room (Women)\n");
+
+	for (i; i < 4; i++) { // 유지된 i를 그대로 사용함
+		for (int j = 0; j < 3; j++) { // 호수를 나타내는 j는 그대로 유지
+			printf("Room #%d0%d > ", i + 1, j + 1);
+			scanf("%d", &person[i][j]);
+			sum[1] += person[i][j]; // 여자 합산
+			sum[2] += person[i][j]; // 전체 합산
+
+		}
+	}
+
+	ratio[0] = (float)sum[0] / (4 * 3 * 2)*100; // 각 방 입주 가능 인원 * 호수 * 남자 층 * %를 위한 100
+	ratio[1] = (float)sum[1] / (4 * 3 * 2)*100; // " 여자 층
+	ratio[2] = (float)sum[2] / (4 * 3 * 4)*100; // " 전체 층
+	// 강제 자료형 변경으로 양 쪽 형식을 맞춰주었다
+
+	printf("Check result\n");
+	printf("Men: %d/24 (%.1f%%)\n", sum[0], ratio[0]); // % 출력을 위해 %%로 입력
+	printf("Women: %d/24 (%.1f%%)\n", sum[1], ratio[1]);
+	printf("Total: %d/48 (%.1f%%)\n",sum[2], ratio[2]);
+
+	
+	return 0;
+}
