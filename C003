@@ -1,0 +1,128 @@
+#define _CRT_SECURE_NO_WARNINGS
+/*
+Programming Studio C003
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int findRoom(int persons[5]); // 5개의 호실 중 빈 베드가 있는 방을 찾아낸다. (리턴값 1~5)
+void printReport(char mn[10][20], int mr[10], int mc, char wn[10][20], int wr[10], int wc); // 배정 결과를 출력한다.
+
+int main() {
+	char mnames[10][20]; // 남학생명단(최대 10명)
+	int mroom[10];		// 남학생명단별 호실 배정 목록
+	char wnames[10][20]; // 여학생명단(최대 10명)
+	int wroom[10];		// 여학생명단별 호실 배정 목록
+	int person[2][5] = { 0 };   // 2개 층별 5개 호실의 배정 인원 수 
+	int mcount = 0, wcount = 0; // 인원 합계 (남, 여)
+	int menu;
+
+	srand(time(0));
+	printf("===========================================\n");
+	printf("생활관 호실 배정 프로그램\n");
+	printf("===========================================\n");
+	while (1) {
+		printf("메뉴 : 1.남학생 등록 2.여학생 등록 0.종료 > ");
+		scanf("%d", &menu);
+		if (menu == 0) break;
+		else if (menu == 1) {
+			if (mcount >= 10) {
+				printf("정원 초과입니다. 등록불가!\n");
+				continue; 
+			}
+			printf("학생 이름은? > ");
+			scanf("%s", mnames[mcount]);
+			int roomno = findRoom(person[0]);
+			mroom[mcount] = 100 + roomno;
+			printf("%s 학생 %d호실 배정되었습니다.\n", mnames[mcount], mroom[mcount]);
+			mcount++;
+		}
+		else if (menu == 2) {
+			if (wcount >= 10) {
+				printf("정원 초과입니다. 등록불가!\n");
+				continue;
+			}
+			printf("학생 이름은? > ");
+			scanf("%s", wnames[wcount]);
+			int roomno = findRoom(person[1]);
+			wroom[wcount] = 200 + roomno;
+			printf("%s 학생 %d호실 배정되었습니다.\n", wnames[wcount], wroom[wcount]);
+			wcount++;
+		}
+	}
+
+
+	printf("===========================================\n");
+	printf("생활관 호실 배정 결과는 다음과 같습니다.\n");
+	printf("===========================================\n");
+	printReport(mnames, mroom, mcount, wnames, wroom, wcount);
+
+	return 0;
+}
+
+int findRoom(int persons[5]) {
+	// 이 곳에 생각 정리와 코드 구현
+	// 1. while~ (총 인원<=10){
+	// 2. random-> 여유인원 확인 (사람[n]!=2)
+	// 만약 10명 이상이면 경고하게 if 달고
+	// 3. 방이 꽉찼다면 다시 랜덤};
+	// 결국 방 번호 출력
+	int room;
+	while (1) {
+		room = rand()%5+1;
+		if (persons[room-1]==2) {
+			//srand(time(0)); 
+			continue;
+		}
+		else {
+			persons[room-1]++;
+			break;
+		}
+	}
+	return room;
+}
+
+
+void printReport(char mn[10][20], int mr[10], int mc, char wn[10][20], int wr[10], int wc) {
+	// 이 곳에 생각 정리와 코드 구현
+	// 0. 사람 이름과 소속된 방은 등록 순서가 같다는 공통점을 가ㅣㅁ.
+	//  
+	// 1. 학생 명단 
+	//	ㄱ.	그냥 포문 달고 남자/여자 이름 출력
+	//	ㄴ.	mc/wc만큼 반복
+	// 2. 호실별 명단
+	//	ㄱ. 호수 하나당  모두 스캔하고
+	//	ㄴ. 그것을 이중for문으로 5개의 방에 모두 사용
+	//	ㄷ. 최적화 방안을 고민해 보았으나 그냥 구조체 쓰면 해결날 것 같아서 그만뒀습니다
+	if(mc!=0)printf("남학생 명단(%d명)\n",mc);
+	for (int i = 0; i < mc; i++) {
+		printf("%d. %s [%d호]\n", i+1, mn[i], mr[i]);
+	}
+	
+	if(wc!=0)printf("여학생 명단(%d명)\n",wc);
+	for (int j = 0; j < wc; j++) {
+		printf("%d. %s [%d호]\n", j+1, wn[j], wr[j]);
+	}
+
+	printf("호실별 배정 명단\n");
+	for (int i = 101; i <= 105; i++) {
+		printf("%d호 : ",i);
+		for (int k = 0; k < mc; k++) {
+			if (mr[k] == i) {
+				printf("%s ", mn[k]);
+			}
+		}
+		printf("\n");
+	}
+
+	for (int j = 201; j <= 205; j++) {
+		printf("%d호 : ", j);
+		for (int k = 0; k < wc; k++) {
+			if (wr[k] == j) {
+				printf("%s ", wn[k]);
+			}
+		}
+		printf("\n");
+	}
+}
